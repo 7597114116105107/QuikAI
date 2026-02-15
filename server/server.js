@@ -45,7 +45,11 @@ import connectCloudinary from "./configs/cloudinary.js";
 const app = express();
 
 // Connect Cloudinary
-await connectCloudinary();
+//await connectCloudinary();
+connectCloudinary().catch(err => {
+  console.error("Cloudinary error:", err);
+});
+
 
 // CORS (IMPORTANT for Clerk cookies)
 app.use(
@@ -71,7 +75,10 @@ app.use("/api/ai", aiRouter);
 app.use("/api/user", userRouter);
 
 // Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// const PORT = process.env.PORT || 3000;
+// app.listen(PORT, () => {
+//   console.log(`Server is running on port ${PORT}`);
+// });
+
+
+export default app;
