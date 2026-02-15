@@ -5,9 +5,6 @@ import { Sparkles, Gem } from 'lucide-react'
 import {Protect, useAuth} from '@clerk/clerk-react'
 import CreationItem from '../components/CreationItem'
 
-
-axios.defaults.baseURL = import.meta.env.VITE_BASE_URL;
-
 const dummyCreationData = [
   {
     id: 1,
