@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import toast from 'react-hot-toast';
 import Markdown from 'react-markdown';
 import axios from 'axios'
+import { api } from '../api'
 
 
 const BlogTitles = () => {
@@ -24,7 +25,7 @@ const BlogTitles = () => {
         setLoading(true)
         const prompt = `Generate a blog title about ${input} in ${selectedCategory}`
 
-        const { data } = await axios.post('/api/ai/dev/generate-blog-title', { prompt }, {
+        const { data } = await axios.post(api.generateBlogTitle, { prompt }, {
           headers: { Authorization: `Bearer ${await getToken()}` }})
 
           if(data.success){

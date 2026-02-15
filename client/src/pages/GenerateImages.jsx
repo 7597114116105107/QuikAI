@@ -3,6 +3,7 @@ import React, {useState} from 'react'
 import axios from 'axios'
 import { useAuth } from '@clerk/clerk-react';
 import toast from 'react-hot-toast';
+import { api } from '../api'
 
 
 const GenerateImages = () => {
@@ -24,7 +25,7 @@ const GenerateImages = () => {
 
           const prompt = `Generate an image of ${input} in the style ${selectedStyle}`
 
-          const { data } = await axios.post('/api/ai/dev/generate-image', { prompt, publish }, {
+          const { data } = await axios.post(api.generateImage, { prompt, publish }, {
           headers: { Authorization: `Bearer ${await getToken()}` }})
 
           if(data.success){

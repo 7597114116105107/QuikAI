@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react'
 import  {dummyPublishedCreationData} from '../assets/assets'
 import axios from 'axios'
 import toast from 'react-hot-toast'
+import { api } from '../api'
 
 
 const Community = () => {
@@ -17,7 +18,7 @@ const Community = () => {
     try {
       const token = await getToken()
       const res = await 
-      axios.get('/api/ai/dev/get-published-creations', { headers: { Authorization: `Bearer ${token}` } })
+      axios.get(api.getPublishedCreations, { headers: { Authorization: `Bearer ${token}` } })
       const data = res?.data
       if (!data) return toast.error('No response from server')
       if (data.success) {
@@ -36,7 +37,7 @@ const Community = () => {
     const imageLikeToggle = async (id) => {
       try {
         const token = await getToken()
-        const res = await axios.post('/api/user/toggle-like-creations', { id }, 
+        const res = await axios.post(api.toggleLikeCreations, { id }, 
           { headers: { Authorization: `Bearer ${token}` } }
         )
         const data = res?.data

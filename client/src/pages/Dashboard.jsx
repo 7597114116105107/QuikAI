@@ -4,6 +4,7 @@ import { toast } from "react-hot-toast";
 import { Sparkles, Gem } from 'lucide-react'
 import {Protect, useAuth} from '@clerk/clerk-react'
 import CreationItem from '../components/CreationItem'
+import { api } from '../api'
 
 const dummyCreationData = [
   {
@@ -31,7 +32,7 @@ const Dashboard = () => {
 
   const getDashbordData = async () => {
     try {
-      const {data} = await axios.get('/api/ai/dev/get-user-creations', {headers: {Authorization: `Bearer ${await getToken()}`}})
+      const {data} = await axios.get(api.getUserCreations, {headers: {Authorization: `Bearer ${await getToken()}`}})
 
       if (data.success) {
         setCreations(data.creations)

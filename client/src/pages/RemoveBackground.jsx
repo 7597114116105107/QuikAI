@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import axios from 'axios';
 import { useAuth } from '@clerk/clerk-react';
 import toast from 'react-hot-toast';
+import { api } from '../api'
 
 
 const RemoveBackground = () => {
@@ -21,7 +22,7 @@ const RemoveBackground = () => {
           const formData = new FormData()
           formData.append('image', input) 
 
-          const { data } = await axios.post('/api/ai/dev/remove-image-background', formData, {
+          const { data } = await axios.post(api.removeImageBackground, formData, {
             headers: { Authorization: `Bearer ${await getToken()}` }
           })
 

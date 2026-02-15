@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useAuth } from '@clerk/clerk-react';
 import toast from 'react-hot-toast';
 import Markdown from 'react-markdown';
+import { api } from '../api'
 
 
 const ReviewResume = () => {
@@ -22,7 +23,7 @@ const ReviewResume = () => {
           const formData = new FormData()
           formData.append('resume', input) 
 
-          const { data } = await axios.post('/api/ai/dev/resume-review', formData, {
+          const { data } = await axios.post(api.resumeReview, formData, {
             headers: { Authorization: `Bearer ${await getToken()}` }
           })
 

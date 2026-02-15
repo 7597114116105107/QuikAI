@@ -4,6 +4,7 @@ import axios from 'axios'
 import { useAuth } from '@clerk/clerk-react';
 import toast from 'react-hot-toast';
 import Markdown from "react-markdown";
+import { api } from '../api';
 
 
 
@@ -28,7 +29,7 @@ const WriteArtical = () => {
       setLoading(true)
       const prompt = `Write an article about ${input} in ${selectedLength.text}`
 
-      const {data} = await axios.post('/api/ai/dev/generate-article', {prompt, length: selectedLength.length}, {
+      const {data} = await axios.post(api.generateArticle, {prompt, length: selectedLength.length}, {
         headers: {Authorization: `Bearer ${await getToken()}`}
       })
 
