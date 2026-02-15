@@ -75,14 +75,21 @@ app.use("/api/ai", async (req, res, next) => {
   next();
 });
 
-// ✅ CORS (supports local + production)
+// ✅ CORS: allow frontend origin (local + production + Vercel previews)
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://quikai-server.vercel.app",
+  "https://quik-ai-peach.vercel.app",
+];
 app.use(
   cors({
-    origin: [
-      "http://localhost:5173",
-      "https://quikai-server.vercel.app"
-    ],
-    credentials: true
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true); // same-origin or tools like Postman
+      if (allowedOrigins.includes(origin)) return callback(null, true);
+      if (origin.endsWith(".vercel.app")) return callback(null, true); // Vercel preview deployments
+      callback(new Error("Not allowed by CORS"));
+    },
+    credentials: true,
   })
 );
 
