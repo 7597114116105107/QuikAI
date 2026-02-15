@@ -1,11 +1,9 @@
 import OpenAI from "openai";
 import sql from '../configs/db.js';
 import { clerkClient } from "@clerk/express";
-//import { response } from "express";
 import axios from "axios";
 import { v2 as cloudinary } from "cloudinary";
-import fs from 'fs';
-import { PDFParse } from "pdf-parse";
+// pdf-parse lazy-loaded in resumeReview to avoid native deps at cold start on Vercel
 
 
 
@@ -163,7 +161,10 @@ export const removeImageBackground = async (req, res)=>{
 
         if(!image) return res.status(400).json({success: false, message: 'No image uploaded'});
 
-        const {secure_url} = await cloudinary.uploader.upload(image.path, {transformation: {
+        const imageSource = image.buffer
+          ? `data:${image.mimetype || 'image/png'};base64,${image.buffer.toString('base64')}`
+          : image.path;
+        const {secure_url} = await cloudinary.uploader.upload(imageSource, {transformation: {
             effect: 'background_removal',
             background_removal: 'remove_the_background'
         }})
@@ -202,7 +203,10 @@ export const removeImageObject = async (req, res)=>{
         if(!image) return res.status(400).json({success: false, message: 'No image uploaded'});
         if(!object) return res.status(400).json({success: false, message: 'No object specified'});
 
-     const {public_id} = await cloudinary.uploader.upload(image.path)
+        const imageSource = image.buffer
+          ? `data:${image.mimetype || 'image/png'};base64,${image.buffer.toString('base64')}`
+          : image.path;
+     const {public_id} = await cloudinary.uploader.upload(imageSource)
 
     const imageUrl = cloudinary.url(public_id, {
         transformation: [{effect: `gen_remove:${object}`}],
@@ -244,9 +248,10 @@ export const resumeReview = async (req, res)=>{
         return res.json({success: false, message: 'File size must be less than 5MB.'});
     }
 
-    const dataBuffer = fs.readFileSync(resume.path)
-    const parser = new PDFParse({ data: dataBuffer })
-    const pdfData = await parser.getText()
+    const dataBuffer = resume.buffer || (await import('fs')).default.readFileSync(resume.path);
+    const { PDFParse } = await import('pdf-parse');
+    const parser = new PDFParse({ data: dataBuffer });
+    const pdfData = await parser.getText();
 
         const promptText = `Review the following resume and provide constructive feedback on its strengths, weaknesses, and areas for improvement. Resume Content:\n\n${pdfData.text}`
 
