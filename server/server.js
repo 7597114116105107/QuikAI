@@ -74,11 +74,5 @@ app.get("/", (req, res) => {
 app.use("/api/ai", aiRouter);
 app.use("/api/user", userRouter);
 
-// Start server
-// const PORT = process.env.PORT || 3000;
-// app.listen(PORT, () => {
-//   console.log(`Server is running on port ${PORT}`);
-// });
-
 
 export default app;
